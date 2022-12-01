@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/istyf/aoc22/internal/pkg/aoc/calories"
@@ -16,10 +18,20 @@ func main() {
 
 	defer inputfile.Close()
 
-	result, err := calories.Solve(inputfile)
+	data, err := io.ReadAll(inputfile)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	fmt.Println("The result is", result)
+	result1, err := calories.PartOne(bytes.NewBuffer(data))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	result2, err := calories.PartTwo(bytes.NewBuffer(data))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Printf("Result; part one = %s, part two = %s", result1, result2)
 }

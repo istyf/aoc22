@@ -7,14 +7,24 @@ import (
 	"github.com/matryer/is"
 )
 
-func TestCalories(t *testing.T) {
+func TestCaloriesPartOne(t *testing.T) {
 	is := is.New(t)
 	rd := bytes.NewReader([]byte(input))
 
-	result, err := Solve(rd)
+	result, err := PartOne(rd)
 
 	is.NoErr(err)
 	is.Equal(result, "24000")
+}
+
+func TestCaloriesPartTwo(t *testing.T) {
+	is := is.New(t)
+	rd := bytes.NewReader([]byte(input))
+
+	result, err := PartTwo(rd)
+
+	is.NoErr(err)
+	is.Equal(result, "45000")
 }
 
 const input string = `1000
