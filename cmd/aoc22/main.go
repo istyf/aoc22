@@ -28,12 +28,10 @@ func main() {
 		panic(err.Error())
 	}
 
-	result2 := ""
-
-	/*	result2, err := rps.PartTwo(bytes.NewBuffer(data))
-		if err != nil {
-			panic(err.Error())
-		}*/
+	result2, err := rps.PartTwo(bytes.NewBuffer(data))
+	if err != nil {
+		panic(err.Error())
+	}
 
 	fmt.Printf("Result; part one = %s, part two = %s", result1, result2)
 }

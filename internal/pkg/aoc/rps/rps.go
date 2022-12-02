@@ -10,6 +10,87 @@ import (
 
 func PartOne(rd io.Reader) (string, error) {
 
+	scanner := bufio.NewScanner(rd)
+	totalScore := 0
+
+	for scanner.Scan() {
+		elfHand, myHand, err := parseTurn(scanner.Text())
+
+		if err != nil {
+			return "", err
+		}
+
+		totalScore += score(elfHand, myHand)
+	}
+
+	return strconv.FormatInt(int64(totalScore), 10), nil
+}
+
+func PartTwo(rd io.Reader) (string, error) {
+
+	scanner := bufio.NewScanner(rd)
+	totalScore := 0
+
+	for scanner.Scan() {
+		elfHand, instruction, err := parseTurn(scanner.Text())
+
+		if err != nil {
+			return "", err
+		}
+
+		myHand := followInstruction(elfHand, instruction)
+		totalScore += score(elfHand, myHand)
+	}
+
+	return strconv.FormatInt(int64(totalScore), 10), nil
+}
+
+func parseTurn(line string) (string, string, error) {
+	turn := strings.Split(line, " ")
+	if len(turn) != 2 {
+		return "", "", errors.New("erroneous input")
+	}
+
+	return turn[0], turn[1], nil
+}
+
+func followInstruction(elfHand, instruction string) string {
+	const (
+		VersusRock     string = "A"
+		VersusPaper    string = "B"
+		VersusScissors string = "C"
+
+		ToWin   string = "Z"
+		ToDraw  string = "Y"
+		ToLoose string = "X"
+
+		PlayRock     string = "X"
+		PlayPaper    string = "Y"
+		PlayScissors string = "Z"
+	)
+
+	requiredHand := map[string]map[string]string{
+		VersusRock: {
+			ToWin:   PlayPaper,
+			ToDraw:  PlayRock,
+			ToLoose: PlayScissors,
+		},
+		VersusPaper: {
+			ToWin:   PlayScissors,
+			ToDraw:  PlayPaper,
+			ToLoose: PlayRock,
+		},
+		VersusScissors: {
+			ToWin:   PlayRock,
+			ToDraw:  PlayScissors,
+			ToLoose: PlayPaper,
+		},
+	}
+
+	return requiredHand[elfHand][instruction]
+}
+
+func score(elfHand, myHand string) int {
 	const (
 		VersusRock     string = "A"
 		VersusPaper    string = "B"
@@ -28,7 +109,7 @@ func PartOne(rd io.Reader) (string, error) {
 		Loss int = 0
 	)
 
-	score := map[string]map[string]int{
+	compare := map[string]map[string]int{
 		VersusRock: {
 			IfIPlayRock:     (Draw + ChoiceOfRock),
 			IfIPlayPaper:    (Win + ChoiceOfPaper),
@@ -46,27 +127,5 @@ func PartOne(rd io.Reader) (string, error) {
 		},
 	}
 
-	parseTurn := func(turn string) (string, string, error) {
-		hands := strings.Split(turn, " ")
-		if len(hands) != 2 {
-			return "", "", errors.New("erroneous input")
-		}
-
-		return hands[0], hands[1], nil
-	}
-
-	scanner := bufio.NewScanner(rd)
-	totalScore := 0
-
-	for scanner.Scan() {
-		elfHand, myHand, err := parseTurn(scanner.Text())
-
-		if err != nil {
-			return "", err
-		}
-
-		totalScore += score[elfHand][myHand]
-	}
-
-	return strconv.FormatInt(int64(totalScore), 10), nil
+	return compare[elfHand][myHand]
 }
