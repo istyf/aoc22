@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/istyf/aoc22/internal/pkg/aoc/rps"
+	"github.com/istyf/aoc22/internal/pkg/aoc/rucksack"
 )
 
 func main() {
@@ -23,12 +23,12 @@ func main() {
 		panic(err.Error())
 	}
 
-	result1, err := rps.PartOne(bytes.NewBuffer(data))
+	result1, err := rucksack.PartOne(bytes.NewBuffer(data))
 	if err != nil {
 		panic(err.Error())
 	}
 
-	result2, err := rps.PartTwo(bytes.NewBuffer(data))
+	result2, err := rucksack.PartTwo(bytes.NewBuffer(data))
 	if err != nil {
 		panic(err.Error())
 	}
