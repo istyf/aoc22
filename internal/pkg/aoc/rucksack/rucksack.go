@@ -14,7 +14,7 @@ func PartOne(rd io.Reader) (string, error) {
 	for scanner.Scan() {
 		contents := scanner.Text()
 		first, second := checkCompartments(contents)
-		missplacedItem := findError(first, second)
+		missplacedItem := findCommonItem(first, second)
 		sumOfPriorities += priority(missplacedItem)
 	}
 
@@ -22,7 +22,22 @@ func PartOne(rd io.Reader) (string, error) {
 }
 
 func PartTwo(rd io.Reader) (string, error) {
-	return "not implemented", nil
+
+	scanner := bufio.NewScanner(rd)
+	sumOfPriorities := 0
+
+	for scanner.Scan() {
+		first := scanner.Text()
+		scanner.Scan()
+		second := scanner.Text()
+		scanner.Scan()
+		third := scanner.Text()
+
+		badge := findCommonItem(first, second, third)
+		sumOfPriorities += priority(badge)
+	}
+
+	return strconv.FormatInt(int64(sumOfPriorities), 10), nil
 }
 
 func checkCompartments(contents string) (string, string) {
@@ -30,17 +45,22 @@ func checkCompartments(contents string) (string, string) {
 	return contents[0 : numberOfItems/2], contents[numberOfItems/2:]
 }
 
-func findError(first, second string) rune {
+func findCommonItem(first string, theRest ...string) rune {
 	const LookupSize int = int('z'-'A') + 1
-	isItemInFirstCompartment := make([]bool, LookupSize)
+	numberOfCarriersOfItemType := make([]int, LookupSize)
 
-	for _, item := range first {
-		isItemInFirstCompartment[item-'A'] = true
+	for _, item := range uniqueItems(first) {
+		numberOfCarriersOfItemType[item-'A'] += 1
 	}
 
-	for _, item := range second {
-		if isItemInFirstCompartment[item-'A'] {
-			return item
+	maxNumberOfCarriersOfAnItem := len(theRest)
+
+	for _, another := range theRest {
+		for _, item := range uniqueItems(another) {
+			numberOfCarriersOfItemType[item-'A'] += 1
+			if numberOfCarriersOfItemType[item-'A'] > maxNumberOfCarriersOfAnItem {
+				return item
+			}
 		}
 	}
 
@@ -53,4 +73,18 @@ func priority(item rune) int {
 	}
 
 	return int(item-'A') + 27
+}
+
+func uniqueItems(contents string) string {
+	hasSeen := make(map[rune]bool)
+	items := make([]rune, 0, len(contents))
+
+	for _, item := range contents {
+		if _, ok := hasSeen[item]; !ok {
+			hasSeen[item] = true
+			items = append(items, item)
+		}
+	}
+
+	return string(items)
 }
