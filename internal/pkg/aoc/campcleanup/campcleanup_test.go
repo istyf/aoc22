@@ -17,6 +17,16 @@ func TestCampCleanupPartOne(t *testing.T) {
 	is.Equal(result, "2")
 }
 
+func TestCampCleanupPartTwo(t *testing.T) {
+	is := is.New(t)
+	rd := bytes.NewReader([]byte(input))
+
+	result, err := PartTwo(rd)
+
+	is.NoErr(err)
+	is.Equal(result, "4")
+}
+
 const input string = `2-4,6-8
 2-3,4-5
 5-7,7-9
