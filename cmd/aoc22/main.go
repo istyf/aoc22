@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/istyf/aoc22/internal/pkg/aoc/rucksack"
+	"github.com/istyf/aoc22/internal/pkg/aoc/campcleanup"
 )
 
 func main() {
@@ -23,12 +23,12 @@ func main() {
 		panic(err.Error())
 	}
 
-	result1, err := rucksack.PartOne(bytes.NewBuffer(data))
+	result1, err := campcleanup.PartOne(bytes.NewBuffer(data))
 	if err != nil {
 		panic(err.Error())
 	}
 
-	result2, err := rucksack.PartTwo(bytes.NewBuffer(data))
+	result2, err := campcleanup.PartTwo(bytes.NewBuffer(data))
 	if err != nil {
 		panic(err.Error())
 	}
