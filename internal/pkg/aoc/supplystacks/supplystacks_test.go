@@ -17,6 +17,16 @@ func TestSupplyStacksPartOne(t *testing.T) {
 	is.Equal(result, "CMZ")
 }
 
+func TestSupplyStacksPartTwo(t *testing.T) {
+	is := is.New(t)
+	rd := bytes.NewReader([]byte(input))
+
+	result, err := PartTwo(rd)
+
+	is.NoErr(err)
+	is.Equal(result, "MCD")
+}
+
 const input string = `    [D]    
 [N] [C]    
 [Z] [M] [P]

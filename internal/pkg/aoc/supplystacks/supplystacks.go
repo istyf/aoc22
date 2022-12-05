@@ -13,16 +13,7 @@ func PartOne(rd io.Reader) (string, error) {
 
 	for scanner.Scan() {
 		quantity, from, to := parseNextRearrangement(scanner.Text())
-
-		for i := 0; i < quantity; i++ {
-			// get the size of the origin stack
-			srcStackLength := len(stacks[from])
-			// pop the last (topmost) crate from that stack
-			crate := stacks[from][srcStackLength-1]
-			stacks[from] = stacks[from][:srcStackLength-1]
-			// and push it to the top of the target stack
-			stacks[to] = append(stacks[to], crate)
-		}
+		stacks[from], stacks[to] = move(quantity, 1, stacks[from], stacks[to])
 	}
 
 	result := ""
@@ -35,7 +26,36 @@ func PartOne(rd io.Reader) (string, error) {
 }
 
 func PartTwo(rd io.Reader) (string, error) {
-	return "not implemented", nil
+	scanner := bufio.NewScanner(rd)
+	stacks := parseStacks(scanner)
+
+	for scanner.Scan() {
+		quantity, from, to := parseNextRearrangement(scanner.Text())
+		stacks[from], stacks[to] = move(1, quantity, stacks[from], stacks[to])
+	}
+
+	result := ""
+
+	for _, stack := range stacks {
+		result += string(stack[len(stack)-1])
+	}
+
+	return result, nil
+}
+
+func move(amount, batch int, from, to []rune) ([]rune, []rune) {
+	for i := 0; i < amount; i++ {
+		// get the size of the origin stack
+		srcStackLength := len(from)
+		// pop the last (topmost) batch size number of crates from that stack
+		crates := from[srcStackLength-batch:]
+
+		from = from[:srcStackLength-batch]
+		// and push them to the top of the target stack
+		to = append(to, crates...)
+	}
+
+	return from, to
 }
 
 func parseNextRearrangement(line string) (quantity int, from int, to int) {
