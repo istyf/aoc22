@@ -16,7 +16,7 @@ import (
 var day string
 var inputFilePath string
 
-type AoCSolver func(io.Reader) (string, error)
+type SolverFunc func(io.Reader) (string, error)
 
 func main() {
 
@@ -24,7 +24,7 @@ func main() {
 	flag.StringVar(&inputFilePath, "input", "./input.dat", "The path to the inout file")
 	flag.Parse()
 
-	solutions := map[string][]AoCSolver{
+	solutions := map[string][]SolverFunc{
 		"1": {calories.PartOne, calories.PartTwo},
 		"2": {rps.PartOne, rps.PartTwo},
 		"3": {rucksack.PartOne, rucksack.PartTwo},
