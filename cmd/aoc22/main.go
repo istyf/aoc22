@@ -11,6 +11,7 @@ import (
 	"github.com/istyf/aoc22/internal/pkg/aoc/campcleanup"
 	"github.com/istyf/aoc22/internal/pkg/aoc/rps"
 	"github.com/istyf/aoc22/internal/pkg/aoc/rucksack"
+	"github.com/istyf/aoc22/internal/pkg/aoc/supplystacks"
 )
 
 var day string
@@ -20,7 +21,7 @@ type SolverFunc func(io.Reader) (string, error)
 
 func main() {
 
-	flag.StringVar(&day, "day", "4", "")
+	flag.StringVar(&day, "day", "5", "")
 	flag.StringVar(&inputFilePath, "input", "./input.dat", "The path to the inout file")
 	flag.Parse()
 
@@ -29,6 +30,7 @@ func main() {
 		"2": {rps.PartOne, rps.PartTwo},
 		"3": {rucksack.PartOne, rucksack.PartTwo},
 		"4": {campcleanup.PartOne, campcleanup.PartTwo},
+		"5": {supplystacks.PartOne, supplystacks.PartTwo},
 	}
 
 	inputfile, err := os.Open(inputFilePath)
