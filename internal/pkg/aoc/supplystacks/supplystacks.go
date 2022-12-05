@@ -11,9 +11,11 @@ func PartOne(rd io.Reader) (string, error) {
 	scanner := bufio.NewScanner(rd)
 	stacks := parseStacks(scanner)
 
+	const BatchSize int = 1
+
 	for scanner.Scan() {
 		quantity, from, to := parseNextRearrangement(scanner.Text())
-		stacks[from], stacks[to] = move(quantity, 1, stacks[from], stacks[to])
+		stacks[from], stacks[to] = move(quantity, BatchSize, stacks[from], stacks[to])
 	}
 
 	result := ""
@@ -29,9 +31,11 @@ func PartTwo(rd io.Reader) (string, error) {
 	scanner := bufio.NewScanner(rd)
 	stacks := parseStacks(scanner)
 
+	const SingleMove int = 1
+
 	for scanner.Scan() {
-		quantity, from, to := parseNextRearrangement(scanner.Text())
-		stacks[from], stacks[to] = move(1, quantity, stacks[from], stacks[to])
+		batchSize, from, to := parseNextRearrangement(scanner.Text())
+		stacks[from], stacks[to] = move(SingleMove, batchSize, stacks[from], stacks[to])
 	}
 
 	result := ""
