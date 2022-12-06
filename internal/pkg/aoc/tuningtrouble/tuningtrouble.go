@@ -6,38 +6,25 @@ import (
 	"strconv"
 )
 
+type MarkerFinderFunc func(r rune) bool
+
 func PartOne(input io.Reader) (string, error) {
-	b, err := io.ReadAll(input)
-	if err != nil {
-		return "", err
-	}
-
-	const MarkerSize int = 4
-	isEndOfMarker := newMarkerFinder(MarkerSize)
-
-	inputString := string(b)
-
-	for idx, c := range inputString {
-		if isEndOfMarker(c) {
-			return strconv.FormatInt(int64(idx+1), 10), nil
-		}
-	}
-
-	return "", errors.New("no marker found")
+	const StartOfPacketMarkerSize int = 4
+	return findMarker(input, newMarkerFinder(StartOfPacketMarkerSize))
 }
 
 func PartTwo(input io.Reader) (string, error) {
+	const StartOfMessageMarkerSize int = 14
+	return findMarker(input, newMarkerFinder(StartOfMessageMarkerSize))
+}
+
+func findMarker(input io.Reader, isEndOfMarker MarkerFinderFunc) (string, error) {
 	b, err := io.ReadAll(input)
 	if err != nil {
 		return "", err
 	}
 
-	const MarkerSize int = 14
-	isEndOfMarker := newMarkerFinder(MarkerSize)
-
-	inputString := string(b)
-
-	for idx, c := range inputString {
+	for idx, c := range string(b) {
 		if isEndOfMarker(c) {
 			return strconv.FormatInt(int64(idx+1), 10), nil
 		}
@@ -46,7 +33,7 @@ func PartTwo(input io.Reader) (string, error) {
 	return "", errors.New("no marker found")
 }
 
-func newMarkerFinder(size int) func(r rune) bool {
+func newMarkerFinder(size int) MarkerFinderFunc {
 
 	lookupIndex := func(r rune) int { return int(r - 'A') }
 	maxLookupIndex := lookupIndex('z')
