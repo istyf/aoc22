@@ -50,7 +50,7 @@ func newMarkerFinder(size int) MarkerFinderFunc {
 		memory[insertPosition] = r
 		numberOfRunesWithinWindow[lookupIndex(r)]++
 
-		if numberOfRunesRead < 4 {
+		if numberOfRunesRead < size {
 			return false
 		}
 
