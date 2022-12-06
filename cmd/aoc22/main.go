@@ -32,7 +32,7 @@ func main() {
 		"3": {rucksack.PartOne, rucksack.PartTwo},
 		"4": {campcleanup.PartOne, campcleanup.PartTwo},
 		"5": {supplystacks.PartOne, supplystacks.PartTwo},
-		"6": {tuningtrouble.PartOne},
+		"6": {tuningtrouble.PartOne, tuningtrouble.PartTwo},
 	}
 
 	inputfile, err := os.Open(inputFilePath)

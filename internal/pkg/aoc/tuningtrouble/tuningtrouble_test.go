@@ -24,3 +24,21 @@ func TestPartOne(t *testing.T) {
 	t.Run("fourth", tune("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "10"))
 	t.Run("fifth", tune("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", "11"))
 }
+
+func TestPartTwo(t *testing.T) {
+
+	tune := func(input string, want string) func(t *testing.T) {
+		return func(t *testing.T) {
+			is := is.New(t)
+			result, err := PartTwo(bytes.NewBuffer([]byte(input)))
+			is.NoErr(err)
+			is.Equal(result, want)
+		}
+	}
+
+	t.Run("first", tune("mjqjpqmgbljsphdztnvjfqwrcgsmlb", "19"))
+	t.Run("second", tune("bvwbjplbgvbhsrlpgdmjqwftvncz", "23"))
+	t.Run("third", tune("nppdvjthqldpwncqszvftbrmjlhg", "23"))
+	t.Run("fourth", tune("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", "29"))
+	t.Run("fifth", tune("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", "26"))
+}

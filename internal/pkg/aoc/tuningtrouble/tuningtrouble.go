@@ -26,6 +26,26 @@ func PartOne(input io.Reader) (string, error) {
 	return "", errors.New("no marker found")
 }
 
+func PartTwo(input io.Reader) (string, error) {
+	b, err := io.ReadAll(input)
+	if err != nil {
+		return "", err
+	}
+
+	const MarkerSize int = 14
+	isEndOfMarker := newMarkerFinder(MarkerSize)
+
+	inputString := string(b)
+
+	for idx, c := range inputString {
+		if isEndOfMarker(c) {
+			return strconv.FormatInt(int64(idx+1), 10), nil
+		}
+	}
+
+	return "", errors.New("no marker found")
+}
+
 func newMarkerFinder(size int) func(r rune) bool {
 
 	lookupIndex := func(r rune) int { return int(r - 'A') }
