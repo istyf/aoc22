@@ -15,6 +15,14 @@ func TestPartOne(t *testing.T) {
 	is.Equal(result, "95437")
 }
 
+func TestPartTwo(t *testing.T) {
+	is := is.New(t)
+
+	result, err := PartTwo(bytes.NewBuffer([]byte(input)))
+	is.NoErr(err)
+	is.Equal(result, "24933642")
+}
+
 const input string = `$ cd /
 $ ls
 dir a

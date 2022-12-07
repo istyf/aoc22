@@ -30,6 +30,48 @@ func PartOne(input io.Reader) (string, error) {
 	return strconv.FormatInt(int64(size), 10), nil
 }
 
+func PartTwo(input io.Reader) (string, error) {
+	scanner := bufio.NewScanner(input)
+
+	var err error
+	sh := newShell()
+
+	for scanner.Scan() {
+		cmd := scanner.Text()
+		sh, err = sh.ParseCommand(cmd)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	sh, _ = sh.ParseCommand("$ cd /")
+
+	onlyRoot := func(d dir) bool { return d.parent == nil }
+	sizeOfRootDirectory := sh.Size(onlyRoot)
+	requiredSpaceToFree := 30000000 - (70000000 - sizeOfRootDirectory)
+
+	sizeOfLastCandidate := 0
+
+	filter := func(d dir) bool {
+		dirSize := d.Size()
+		if dirSize < requiredSpaceToFree {
+			return false
+		}
+
+		if sizeOfLastCandidate == 0 || dirSize < sizeOfLastCandidate {
+			sizeOfLastCandidate = dirSize
+			return true
+		}
+
+		return false
+	}
+
+	matchingDirectories := sh.Find(filter)
+	bestMatch := matchingDirectories[len(matchingDirectories)-1]
+
+	return strconv.FormatInt(int64(bestMatch.Size()), 10), nil
+}
+
 func newShell() Shell {
 	return &shell{
 		currentDirectory: newDir("/", nil),
@@ -39,6 +81,7 @@ func newShell() Shell {
 
 type Shell interface {
 	ParseCommand(string) (Shell, error)
+	Find(func(dir) bool) []dir
 	Size(func(dir) bool) int
 }
 
@@ -58,6 +101,10 @@ func (sh *shell) ParseCommand(cmd string) (Shell, error) {
 	}
 
 	panic("unknown state")
+}
+
+func (sh *shell) Find(filter func(dir) bool) []dir {
+	return sh.currentDirectory.Find(filter)
 }
 
 func (sh *shell) Size(filter func(dir) bool) int {

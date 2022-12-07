@@ -34,7 +34,7 @@ func main() {
 		"4": {campcleanup.PartOne, campcleanup.PartTwo},
 		"5": {supplystacks.PartOne, supplystacks.PartTwo},
 		"6": {tuningtrouble.PartOne, tuningtrouble.PartTwo},
-		"7": {nospaceleft.PartOne},
+		"7": {nospaceleft.PartOne, nospaceleft.PartTwo},
 	}
 
 	inputfile, err := os.Open(inputFilePath)
