@@ -9,35 +9,20 @@ import (
 )
 
 func PartOne(input io.Reader) (string, error) {
-	scanner := bufio.NewScanner(input)
-
-	head := position{}
-	tail := position{}
-
-	visitedPositions := map[string]bool{tail.pos(): true}
-
-	for scanner.Scan() {
-		var direction string
-		var distance int
-
-		fmt.Sscanf(scanner.Text(), "%s %d", &direction, &distance)
-
-		for move := 0; move < distance; move++ {
-			head = head.move(direction)
-			tail = tail.chase(head)
-			visitedPositions[tail.pos()] = true
-		}
-	}
-
-	numVisitedPositions := len(visitedPositions)
-	return strconv.FormatInt(int64(numVisitedPositions), 10), nil
+	const WithTwoKnots int = 2
+	return moveRope(input, WithTwoKnots)
 }
 
 func PartTwo(input io.Reader) (string, error) {
+	const WithTenKnots int = 10
+	return moveRope(input, WithTenKnots)
+}
+
+func moveRope(input io.Reader, numberOfKnots int) (string, error) {
 	scanner := bufio.NewScanner(input)
 
 	head := position{}
-	knots := make([]position, 9)
+	knots := make([]position, numberOfKnots-1)
 	tailpos := func() string { return knots[len(knots)-1].pos() }
 
 	visitedPositions := map[string]bool{tailpos(): true}
