@@ -38,7 +38,7 @@ func main() {
 		"6": {tuningtrouble.PartOne, tuningtrouble.PartTwo},
 		"7": {nospaceleft.PartOne, nospaceleft.PartTwo},
 		"8": {treetoptreehouse.PartOne, treetoptreehouse.PartTwo},
-		"9": {ropebridge.PartOne},
+		"9": {ropebridge.PartOne, ropebridge.PartTwo},
 	}
 
 	inputfile, err := os.Open(inputFilePath)

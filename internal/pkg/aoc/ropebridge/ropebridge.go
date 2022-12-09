@@ -33,6 +33,37 @@ func PartOne(input io.Reader) (string, error) {
 	return strconv.FormatInt(int64(numVisitedPositions), 10), nil
 }
 
+func PartTwo(input io.Reader) (string, error) {
+	scanner := bufio.NewScanner(input)
+
+	head := position{}
+	knots := make([]position, 9)
+	tailpos := func() string { return knots[len(knots)-1].pos() }
+
+	visitedPositions := map[string]bool{tailpos(): true}
+
+	for scanner.Scan() {
+		var direction string
+		var distance int
+
+		fmt.Sscanf(scanner.Text(), "%s %d", &direction, &distance)
+
+		for move := 0; move < distance; move++ {
+			head = head.move(direction)
+			knots[0] = knots[0].chase(head)
+
+			for k := 1; k < len(knots); k++ {
+				knots[k] = knots[k].chase(knots[k-1])
+			}
+
+			visitedPositions[tailpos()] = true
+		}
+	}
+
+	numVisitedPositions := len(visitedPositions)
+	return strconv.FormatInt(int64(numVisitedPositions), 10), nil
+}
+
 type position struct {
 	x int
 	y int
