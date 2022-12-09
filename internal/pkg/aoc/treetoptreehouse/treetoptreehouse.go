@@ -80,6 +80,10 @@ func PartOne(input io.Reader) (string, error) {
 	return strconv.FormatInt(int64(numVisible), 10), nil
 }
 
+func PartTwo(input io.Reader) (string, error) {
+	return "not implemented", nil
+}
+
 func toarr(row string) []tree {
 	arr := make([]tree, len(row))
 	for idx, tree := range row {
