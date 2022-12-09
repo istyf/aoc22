@@ -2,6 +2,7 @@ package treetoptreehouse
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"strconv"
 )
@@ -81,7 +82,72 @@ func PartOne(input io.Reader) (string, error) {
 }
 
 func PartTwo(input io.Reader) (string, error) {
-	return "not implemented", nil
+	scanner := bufio.NewScanner(input)
+	scanner.Scan()
+
+	row := scanner.Text()
+	columnCount := len(row)
+
+	rows := append(make([][]tree, 0, columnCount), toarr(row))
+	rowIdx := 0
+
+	for scanner.Scan() {
+		rowIdx++
+		rows = append(rows, toarr(scanner.Text()))
+	}
+
+	boundsCheck := func(x, y int) (int, int, error) {
+		if x < 0 || y < 0 || x >= columnCount || y >= len(rows) {
+			return 0, 0, errors.New("out of bounds")
+		}
+
+		return x, y, nil
+	}
+
+	viewingDistanceFrom := func(x, y int, move func(int, int) (int, int)) int {
+		candidateTree := rows[y][x]
+		distance := 0
+
+		x, y, err := boundsCheck(move(x, y))
+		if err != nil {
+			return distance
+		}
+
+		for err == nil {
+			distance++
+
+			nextTree := rows[y][x]
+			if nextTree.Height >= candidateTree.Height {
+				return distance
+			}
+
+			x, y, err = boundsCheck(move(x, y))
+		}
+
+		return distance
+	}
+
+	calculateScenicScore := func(x, y int) int {
+		a := viewingDistanceFrom(x, y, func(x_, y_ int) (int, int) { return x_ - 1, y_ })
+		b := viewingDistanceFrom(x, y, func(x_, y_ int) (int, int) { return x_ + 1, y_ })
+		c := viewingDistanceFrom(x, y, func(x_, y_ int) (int, int) { return x_, y_ - 1 })
+		d := viewingDistanceFrom(x, y, func(x_, y_ int) (int, int) { return x_, y_ + 1 })
+
+		return a * b * c * d
+	}
+
+	maxScenicScore := 0
+
+	for y := 1; y < len(rows)-1; y++ {
+		for x := 1; x < columnCount-1; x++ {
+			score := calculateScenicScore(x, y)
+			if score > maxScenicScore {
+				maxScenicScore = score
+			}
+		}
+	}
+
+	return strconv.FormatInt(int64(maxScenicScore), 10), nil
 }
 
 func toarr(row string) []tree {

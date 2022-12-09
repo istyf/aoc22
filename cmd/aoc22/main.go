@@ -36,7 +36,7 @@ func main() {
 		"5": {supplystacks.PartOne, supplystacks.PartTwo},
 		"6": {tuningtrouble.PartOne, tuningtrouble.PartTwo},
 		"7": {nospaceleft.PartOne, nospaceleft.PartTwo},
-		"8": {treetoptreehouse.PartOne},
+		"8": {treetoptreehouse.PartOne, treetoptreehouse.PartTwo},
 	}
 
 	inputfile, err := os.Open(inputFilePath)
