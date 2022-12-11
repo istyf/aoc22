@@ -1,8 +1,10 @@
 package monkies
 
 import (
+	"bufio"
 	"io"
 	"strconv"
+	"strings"
 )
 
 func PartOne(input io.Reader) (string, error) {
@@ -40,6 +42,10 @@ type item struct {
 	worryLevel int
 }
 
+func newItem(worry int64) *item {
+	return &item{worryLevel: int(worry)}
+}
+
 type OpFunc func(int) int
 type TestFunc func(int) bool
 
@@ -49,6 +55,13 @@ type monkey struct {
 	test           TestFunc
 	receivers      map[bool]int
 	numberOfThrows int
+}
+
+func newMonkey() *monkey {
+	return &monkey{
+		items:     []item{},
+		receivers: map[bool]int{},
+	}
 }
 
 func (m *monkey) inspectAndThrow(throw func(item, int)) {
@@ -63,32 +76,63 @@ func (m *monkey) inspectAndThrow(throw func(item, int)) {
 }
 
 func parseMonkies(input io.Reader) ([]monkey, error) {
-	monkies := []monkey{
-		{
-			items:     []item{{79}, {98}},
-			operation: mul(19),
-			test:      divisibleBy(23),
-			receivers: map[bool]int{true: 2, false: 3},
-		},
-		{
-			items:     []item{{54}, {65}, {75}, {74}},
-			operation: add(6),
-			test:      divisibleBy(19),
-			receivers: map[bool]int{true: 2, false: 0},
-		},
-		{
-			items:     []item{{79}, {60}, {97}},
-			operation: square(),
-			test:      divisibleBy(13),
-			receivers: map[bool]int{true: 1, false: 3},
-		},
-		{
-			items:     []item{{74}},
-			operation: add(3),
-			test:      divisibleBy(17),
-			receivers: map[bool]int{true: 0, false: 1},
-		},
+	monkies := []monkey{}
+
+	scanner := bufio.NewScanner(input)
+	currentMonkey := newMonkey()
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		if line == "" {
+			monkies = append(monkies, *currentMonkey)
+			currentMonkey = newMonkey()
+			continue
+		}
+
+		colonPos := strings.Index(line, ":")
+
+		if strings.Contains(line, "Starting items:") {
+			for _, item := range strings.Split(line[colonPos+2:], ", ") {
+				worry, _ := strconv.ParseInt(item, 10, 64)
+				currentMonkey.items = append(currentMonkey.items, *newItem(worry))
+			}
+		} else if strings.HasPrefix(line, "  Operation: new = ") {
+			line = line[len("  Operation: new = "):]
+
+			parts := strings.Split(line, " ")
+			if parts[0] != "old" {
+				panic("that was unexpected")
+			}
+
+			if parts[1] == "*" {
+				if parts[2] == "old" {
+					currentMonkey.operation = square()
+				} else {
+					factor, _ := strconv.ParseInt(parts[2], 10, 64)
+					currentMonkey.operation = mul(int(factor))
+				}
+			} else if parts[1] == "+" {
+				amount, _ := strconv.ParseInt(parts[2], 10, 64)
+				currentMonkey.operation = add(int(amount))
+			}
+		} else if strings.HasPrefix(line, "  Test: divisible by ") {
+			line = line[len("  Test: divisible by "):]
+			divisor, _ := strconv.ParseInt(line, 10, 64)
+			currentMonkey.test = divisibleBy(int(divisor))
+		} else if strings.HasPrefix(line, "    If true: throw to monkey ") {
+			line = line[len("    If true: throw to monkey "):]
+			receiver, _ := strconv.ParseInt(line, 10, 64)
+			currentMonkey.receivers[true] = int(receiver)
+		} else if strings.HasPrefix(line, "    If false: throw to monkey ") {
+			line = line[len("    If false: throw to monkey "):]
+			receiver, _ := strconv.ParseInt(line, 10, 64)
+			currentMonkey.receivers[false] = int(receiver)
+		}
 	}
+
+	monkies = append(monkies, *currentMonkey)
+
 	return monkies, nil
 }
 

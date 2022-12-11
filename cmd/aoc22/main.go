@@ -10,6 +10,7 @@ import (
 	"github.com/istyf/aoc22/internal/pkg/aoc/calories"
 	"github.com/istyf/aoc22/internal/pkg/aoc/campcleanup"
 	"github.com/istyf/aoc22/internal/pkg/aoc/crt"
+	"github.com/istyf/aoc22/internal/pkg/aoc/monkies"
 	"github.com/istyf/aoc22/internal/pkg/aoc/nospaceleft"
 	"github.com/istyf/aoc22/internal/pkg/aoc/ropebridge"
 	"github.com/istyf/aoc22/internal/pkg/aoc/rps"
@@ -26,7 +27,7 @@ type SolverFunc func(io.Reader) (string, error)
 
 func main() {
 
-	flag.StringVar(&day, "day", "10", "")
+	flag.StringVar(&day, "day", "11", "")
 	flag.StringVar(&inputFilePath, "input", "./input.dat", "The path to the inout file")
 	flag.Parse()
 
@@ -41,6 +42,7 @@ func main() {
 		"8":  {treetoptreehouse.PartOne, treetoptreehouse.PartTwo},
 		"9":  {ropebridge.PartOne, ropebridge.PartTwo},
 		"10": {crt.PartOne, crt.PartTwo},
+		"11": {monkies.PartOne},
 	}
 
 	inputfile, err := os.Open(inputFilePath)
