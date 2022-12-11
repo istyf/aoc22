@@ -17,6 +17,16 @@ func TestCRTPartOne(t *testing.T) {
 	is.Equal(result, "13140")
 }
 
+func TestCRTPartTwo(t *testing.T) {
+	is := is.New(t)
+	rd := bytes.NewReader([]byte(input))
+
+	result, err := PartTwo(rd)
+
+	is.NoErr(err)
+	is.Equal(result, expectation)
+}
+
 const input string = `addx 15
 addx -11
 addx 6
@@ -163,3 +173,10 @@ addx -11
 noop
 noop
 noop`
+
+const expectation string = `##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######.....`

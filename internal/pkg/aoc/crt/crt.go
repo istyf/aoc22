@@ -42,3 +42,7 @@ func PartOne(input io.Reader) (string, error) {
 
 	return strconv.FormatInt(int64(accumulator), 10), nil
 }
+
+func PartTwo(input io.Reader) (string, error) {
+	return "not implemented", nil
+}
