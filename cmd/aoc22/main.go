@@ -40,7 +40,7 @@ func main() {
 		"7":  {nospaceleft.PartOne, nospaceleft.PartTwo},
 		"8":  {treetoptreehouse.PartOne, treetoptreehouse.PartTwo},
 		"9":  {ropebridge.PartOne, ropebridge.PartTwo},
-		"10": {crt.PartOne},
+		"10": {crt.PartOne, crt.PartTwo},
 	}
 
 	inputfile, err := os.Open(inputFilePath)
